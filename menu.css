@@ -1,0 +1,236 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#0F172A;
+color:white;
+}
+
+nav{
+
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 8%;
+background:#111827;
+box-shadow:0 3px 10px rgba(0,0,0,.3);
+z-index:1000;
+
+}
+
+nav h2{
+
+color:#3B82F6;
+
+}
+
+nav ul{
+
+display:flex;
+list-style:none;
+gap:30px;
+
+}
+
+nav a{
+
+color:white;
+text-decoration:none;
+transition:.3s;
+
+}
+
+nav a:hover{
+
+color:#06B6D4;
+
+}
+
+.hero{
+
+height:70vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+
+}
+
+.hero h1{
+
+font-size:3rem;
+margin-bottom:20px;
+
+}
+
+.hero p{
+
+max-width:700px;
+font-size:1.2rem;
+color:#CBD5E1;
+
+}
+
+.contenedor{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:30px;
+padding:80px;
+
+}
+
+.card{
+
+background:#1E293B;
+border-radius:15px;
+overflow:hidden;
+transition:.4s;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+
+}
+
+.card img{
+
+width:100%;
+height: 100%;
+object-fit:cover;
+
+}
+
+.card h3{
+text-align: center;
+padding:10px;
+
+}
+
+.card p{
+
+padding:0 20px 20px;
+color:#cde1cb;
+
+}
+
+.card a{
+
+display:block;
+margin:20px;
+padding:12px;
+background:#3B82F6;
+color:white;
+text-align:center;
+border-radius:8px;
+text-decoration:none;
+transition:.3s;
+
+}
+
+.card a:hover{
+
+background:#06B6D4;
+
+}
+
+footer{
+
+background:#111827;
+padding:30px;
+text-align:center;
+
+}
+
+footer img{
+
+margin-top:15px;
+width:90px;
+
+}
+
+@media(max-width:768px){
+
+nav{
+
+flex-direction:column;
+gap:15px;
+
+}
+
+.hero h1{
+
+font-size:2.2rem;
+
+}
+
+.contenedor{
+
+padding:30px;
+
+}
+
+}
+
+
+
+.contenedor2 {
+    width: 200px;          /* ancho del cuadro */
+    height: 290px;         /* alto del cuadro */
+    border: 2px solid #333; /* borde del cuadro */
+    display: flex;         /* para centrar */
+    justify-content: center;
+    align-items: center;
+    margin: 0px auto;     /* margen alrededor */
+    background-color: #f9f9f9; /* color de fondo */
+}
+
+
+
+.logo {
+    max-width: 100%;       /* que no se salga del cuadro */
+    max-height: 100%;
+    object-fit: contain;   /* ajusta la imagen dentro del cuadro */
+    transition: transform 0.3s ease; /* suaviza el movimiento */
+}
+
+
+
+.logo:hover {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.logo {
+    max-width: 100%;          /* la imagen nunca se sale del contenedor */
+    height: auto;             /* mantiene proporción */
+    transition: transform 0.3s ease; /* suaviza el movimiento */
+    display: block;
+    margin: 0 auto;           /* centra la imagen */
+}
+
+
+
+/* Responsive: ajusta el efecto según el tamaño de pantalla */
+@media (max-width: 768px) {
+    .logo:hover {
+        transform: translateY(-5px) scale(1.02); /* menos movimiento en pantallas pequeñas */
+    }
+}
+
+@media (max-width: 480px) {
+    .logo:hover {
+        transform: none; /* sin efecto en móviles muy pequeños */
+    }
+}
