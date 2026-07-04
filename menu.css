@@ -8,6 +8,7 @@ font-family:'Poppins',sans-serif;
 body{
 background:#0F172A;
 color:white;
+overflow-y: auto;
 }
 
 nav{
@@ -161,6 +162,178 @@ width:90px;
 
 }
 
+/* //efecto burbuja informativa */
+/* Contenedor de burbujas */
+.bubble-container {
+  position: fixed;   /* puede ser fixed para que las burbujas floten sobre todo */
+  inset: 0;
+  pointer-events: none;  /* importante: deja pasar clicks/scroll al contenido debajo */
+  z-index: 900;
+}
+
+/* Contenedor de burbujas */
+
+/* Burbuja (ajustada) */
+.bubble {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at 30% 30%, #ffffff 30%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  position: absolute;
+  bottom: -80px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: floatUp 10s linear forwards;
+  box-shadow: inset -5px -5px 15px rgba(255,255,255,0.5);
+  pointer-events: auto;
+  overflow: hidden; /* <-- importante: recorta la imagen dentro de la burbuja */
+}
+
+/* Icono dentro de la burbuja: circular y en esquina superior derecha */
+.bubble .bubble-icon {
+  width: 40%;              /* tamaño relativo a la burbuja */
+  height: 40%;
+  border-radius: 50%;      /* circular */
+  position: absolute;      /* posicionado respecto a la burbuja */
+  top: 6%;                 /* separación superior */
+  right: 6%;               /* separación derecha */
+  object-fit: cover;       /* recorta la imagen para llenar el círculo */
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  transform: translateZ(0); /* mejora render en algunos navegadores */
+}
+
+/* Animación de flotación */
+@keyframes floatUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-120vh); }
+}
+
+/* Mensaje (clonado y posicionado en container) */
+.info-message {
+  position: fixed;
+  background: #fff;
+  color: #2d3436;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  width: 220px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 1200;
+}
+
+/* Mostrar y animar subida lenta */
+/* Mensaje (ahora fixed para posicionarse respecto a la ventana) */
+.info-message {
+  position: fixed;            /* <-- FIX: usar fixed para posicionamiento en viewport */
+  background: #fff;
+  color: #2d3436;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  width: 220px;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: 1200;              /* encima de todo */
+}
+
+/* Mostrar y animar subida lenta */
+.info-message.show {
+  opacity: 1;
+  animation: slowRise 5s linear forwards;
+}
+
+
+
+/* .bubble.active .info-message {
+  display: block;
+  animation: slowRise 5s linear forwards;
+}
+ */
+
+
+
+/* Animación de subida lenta del mensaje */
+/*  @keyframes slowRise {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to { opacity: 1; transform: translate(-50%, -80px); }
+} */
+ 
+/* Efecto de explosión  */
+.bubble.exploded {
+  animation: explode 0.45s forwards;
+} 
+
+/*  @keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}  */
+
+
+/* @keyframes slowRise {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-80px); opacity: 1; }
+}
+ */
+/* Efecto de explosión visual en la burbuja */
+
+
+@keyframes slowRise {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-80px); opacity: 1; }
+}
+
+@keyframes explode {
+  0% { transform: scale(1); opacity: 1; }
+  60% { transform: scale(1.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Pequeños fragmentos (opcional) */
+.fragment {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.9;
+  transform: translate(0,0) scale(1);
+  animation: fragMove 700ms ease-out forwards;
+  z-index: 1100;
+}
+@keyframes fragMove {
+  to { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+
+/* imagen que cae: más grande que la burbuja y encima de todo */
+.falling-image {
+  position: fixed;
+  z-index: 1300;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  will-change: transform, left, top;
+  transition: transform 120ms ease;
+}
+
+/* mientras se sostiene, cambiar cursor */
+.falling-image:active { cursor: grabbing; transform: scale(1.02); }
+
+
+
 @media(max-width:768px){
 
 nav{
@@ -233,4 +406,9 @@ padding:30px;
     .logo:hover {
         transform: none; /* sin efecto en móviles muy pequeños */
     }
+}
+
+/* Ajustes para burbujas más pequeñas (responsive) */
+@media (max-width: 768px) {
+  .bubble .bubble-icon { width: 45%; height: 45%; top: 5%; right: 5%; }
 }
