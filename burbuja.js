@@ -41,12 +41,25 @@ setInterval(() => {
     }
   }, 10000);
 }, 2500);
-
  */
+
 // burbuja.js (actualizado con tu bubbleData original)
 const container = document.querySelector(".bubble-container");
 const popSound = document.getElementById("pop-sound");
+popSound.volume = 0.3; // rebaja el volumen
 const riseSound = document.getElementById("rise-sound");
+riseSound.volume = 0.2; // más bajo
+// Conectar slider
+const volumeSlider = document.getElementById("volume-slider");
+if (volumeSlider) {
+  volumeSlider.addEventListener("input", (e) => {
+    const vol = parseFloat(e.target.value);
+    popSound.volume = vol;
+    riseSound.volume = vol;
+  });
+}
+
+
 
 const depositArea = document.getElementById("deposit-area");
 const depositSlot = document.getElementById("deposit-slot");
@@ -61,10 +74,10 @@ const bubbleData = [
   { img: "img/html-logo.png", text: "HTML: estructura de páginas." },
   { img: "img/css-logo.png", text: "CSS: estilos y diseño." },
   { img: "img/html-logo.png", text: "1989: Tim Berners-Lee inventa la Web con HTML como lenguaje de publicación." },
-  { img: "img/www-logo.png", text: "World Wide Web - www" },
+  { img: "img/www-logo.png", text: "World Wide Web - WWW" },
   { img: "img/js-logo.png", text: "JavaScript se creó en un tiempo récord de 10 días en 1995 por Brendan Eich" },
   { img: "img/html-logo.png", text: "HTML se considera el lenguaje web más importante y su invención crucial para el surgimiento, desarrollo y expansión de la World Wide Web (WWW)" },
-  { img: "img/react-logo.png", text: "React: UI basada en componentes." }
+  { img: "img/html-logo2.png", text: "HTML y CSS son los pilares de Internet. Mientras el HTML funciona como el esqueleto o la estructura de un sitio web, el CSS actúa como el diseño o la pintura que le da vida y estilo" }
 ];
 
 const FLOAT_DURATION = 10000;
@@ -427,7 +440,7 @@ function depositImage(el) {
   if (el.parentElement) el.parentElement.removeChild(el);
 
   hideDepositAreaImmediate();
-  openModalWithImage(el.src, text);
+  //openModalWithImage(el.src, text);
   //onClickForModal
 }
 
@@ -439,14 +452,19 @@ function openModalWithImage(src, text = "") {
 
   const caption = document.getElementById("modal-caption");
   if (caption) {
-    caption.textContent = text || "";
-    // si no hay texto, ocultar el contenedor para que quede solo la imagen
-    caption.style.display = text ? "block" : "none";
+    if (text && text.trim() !== "") {
+      caption.textContent = text;
+      caption.style.display = "block";
+    } else {
+      caption.textContent = "";
+      caption.style.display = "none";
+    }
   }
 
   modal.classList.remove("img-modal-hidden");
   modal.setAttribute("aria-hidden", "false");
 }
+
 
 // cerrar modal y limpiar src
 function closeModal() {
@@ -485,14 +503,32 @@ if (depositArea) {
     scheduleHideDepositArea();
   });
 }
-
-
-//PULPO ANIMACIÓN, OCULPTAR OVERLAY
+//Animacion pulpo
 window.addEventListener("load", () => {
+  // Elementos del pulpo/overlay
   const overlay = document.getElementById("intro-overlay");
   const pageContent = document.getElementById("page-content");
 
-  // Mostrar overlay después de 1 segundo
+  // Elementos del control de volumen (puede ser null)
+  const volumeControl = document.getElementById("volume-control");
+  const volumeSlider = document.getElementById("volume-slider");
+  const popSound = document.getElementById("pop-sound");
+  const riseSound = document.getElementById("rise-sound");
+
+  // Seguridad: si no existe overlay o pageContent, abortar y loggear
+  if (!overlay || !pageContent) {
+    console.warn("Falta #intro-overlay o #page-content en el DOM.");
+    return;
+  }
+
+  // Asegurar estado inicial del control (si existe)
+  if (volumeControl) {
+    volumeControl.classList.remove("visible");
+    // Evitar que interfiera con la animación inicial
+    volumeControl.style.pointerEvents = "auto";
+  }
+
+  // Mostrar overlay después de 1s
   setTimeout(() => {
     overlay.style.display = "flex";
 
@@ -505,6 +541,61 @@ window.addEventListener("load", () => {
     setTimeout(() => {
       overlay.style.display = "none";
       pageContent.classList.remove("exit");
+
+      // Mostrar control de volumen con fade-in si existe
+      if (volumeControl) {
+        // usar clase para animación CSS
+        volumeControl.classList.add("visible");
+      }
     }, 6000);
   }, 1000);
+
+  // --- Inicializar slider y sonidos (si existen) ---
+  if (popSound) popSound.volume = 0.3;
+  if (riseSound) riseSound.volume = 0.3;
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener("input", (e) => {
+      const vol = parseFloat(e.target.value);
+      if (popSound) popSound.volume = vol;
+      if (riseSound) riseSound.volume = vol;
+    });
+  }
+
+  // --- Hacer arrastrable el control SOLO si existe ---
+  if (volumeControl) {
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // Soportar pointer events (mouse + touch) de forma simple
+    volumeControl.addEventListener("pointerdown", (e) => {
+      isDragging = true;
+      // pointer events usan clientX/clientY igual que mouse
+      offsetX = e.clientX - volumeControl.offsetLeft;
+      offsetY = e.clientY - volumeControl.offsetTop;
+      volumeControl.style.transition = "none";
+      // capturar el pointer para evitar perder el drag fuera del elemento
+      volumeControl.setPointerCapture(e.pointerId);
+    });
+
+    window.addEventListener("pointermove", (e) => {
+      if (!isDragging) return;
+      // limitar para que no se salga demasiado de la ventana (opcional)
+      const newLeft = Math.max(6, Math.min(window.innerWidth - volumeControl.offsetWidth - 6, e.clientX - offsetX));
+      const newTop  = Math.max(6, Math.min(window.innerHeight - volumeControl.offsetHeight - 6, e.clientY - offsetY));
+      volumeControl.style.left = newLeft + "px";
+      volumeControl.style.top  = newTop + "px";
+      volumeControl.style.bottom = "auto";
+    });
+
+    window.addEventListener("pointerup", (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      volumeControl.style.transition = "opacity 0.6s ease";
+      try { volumeControl.releasePointerCapture(e.pointerId); } catch (err) {}
+    });
+  }
 });
+
+

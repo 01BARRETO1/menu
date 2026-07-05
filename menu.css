@@ -359,9 +359,9 @@ width:90px;
 
 /* Animación frame-by-frame */
 .f1 { animation: frameAnim 1s steps(1) forwards; }
-.f2 { animation: frameAnim 1s steps(1) forwards 1s; }
-.f3 { animation: frameAnim 1s steps(1) forwards 2s; }
-.f4 { animation: frameAnim 1s steps(1) forwards 3s; }
+.f2 { animation: frameAnim 1s steps(1) forwards 2s; }
+.f3 { animation: frameAnim 1s steps(1) forwards 3s; }
+.f4 { animation: frameAnim 1s steps(1) forwards 4s; }
 .f5 { animation: frameAnim 1s steps(1) forwards 4s; }
 
 @keyframes frameAnim {
@@ -458,29 +458,23 @@ width:90px;
 }
 
 /* contenido minimalista: imagen 500x500 sola */
+/* Contenido del modal */
 .img-modal-content {
   position: relative;
   z-index: 3100;
-  width: 500px;
-  height: 500px;
-  max-width: 92vw;
-  max-height: 92vh;
-  display: grid;
-  place-items: center;
-  background: transparent; /* sin fondo extra */
-  border-radius: 8px;
-  pointer-events: auto;
+  max-width: 95vw;
+  max-height: 90vh;
+  background: #0b1220;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(2,6,23,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;   /* permite scroll vertical */
 }
 
-/* imagen forzada a 500x500 (o ajusta en móviles con max-width) */
-.img-modal-content img {
-  width: 500px;
-  height: 500px;
-  object-fit: contain;
-  border-radius: 6px;
-  display: block;
-  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
-}
+
 
 /* botón X pequeño en esquina */
 .modal-close {
@@ -534,6 +528,97 @@ width:90px;
   font-size: 13px;
   cursor: pointer;
 }
+
+/* Imagen dentro del modal */
+.img-modal-content img {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  flex-shrink: 0; /* evita que se reduzca al hacer scroll */
+}
+
+#volume-control {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(17,24,39,0.85);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: move;
+
+  opacity: 0;              /* oculto por defecto */
+  visibility: hidden;
+  transition: opacity 0.6s ease;
+}
+
+#volume-control.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* Responsive: pantallas medianas */
+@media (max-width: 768px) {
+  .img-modal-content img {
+    width: 80vw;   /* ocupa 80% del ancho de la pantalla */
+    height: auto;  /* mantiene proporción */
+  }
+  .modal-caption {
+    font-size: 14px;
+  }
+}
+
+
+
+
+/* Responsive */
+#volume-slider { width: 120px; }
+@media (max-width: 768px) { #volume-slider { width: 90px; } }
+@media (max-width: 480px) { #volume-slider { width: 70px; } }
+
+/* Tablets */
+@media (max-width: 768px) {
+  #volume-control {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  #volume-slider {
+    width: 90px;
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  #volume-control {
+    font-size: 12px;
+    padding: 4px 8px;
+    gap: 6px;
+  }
+  #volume-slider {
+    width: 70px;
+  }
+}
+
+
+/* Responsive: pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+  .img-modal-content img {
+    width: 95vw;   /* casi todo el ancho */
+    height: auto;
+  }
+  .modal-caption {
+    font-size: 13px;
+  }
+}
+
 
 /* en pantallas pequeñas, permitir que la imagen se reduzca */
 @media (max-width: 540px) {
