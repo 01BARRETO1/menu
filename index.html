@@ -18,91 +18,119 @@
 </head>
 
 <body>
+    <div id="page-content">
 
-    <header>
+        <header>
 
-        <nav>
+            <nav>
 
-            <h2>🚀 Mis Proyectos</h2>
+                <h2>🚀 Mis Proyectos</h2>
 
-            <ul>
+                <ul>
 
-                <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Inicio</a></li>
 
-                <li><a href="#proyectos">Proyectos</a></li>
+                    <li><a href="#proyectos">Proyectos</a></li>
 
-                <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
 
-            </ul>
+                </ul>
 
-        </nav>
+            </nav>
 
-        <div class="hero">
+            <div class="hero">
 
-            <h1>Bienvenido a mi Portafolio</h1>
+                <h1>Bienvenido a mi Portafolio</h1>
 
-            <p>Aquí encontrarás todos mis proyectos desarrollados durante mi aprendizaje como programador.</p>
+                <p>Aquí encontrarás todos mis proyectos desarrollados durante mi aprendizaje como programador.</p>
 
-        </div>
-
-    </header>
-
-    <section id="proyectos" class="contenedor">
-
-        <div class="card">
-            <div class="contenedor2">
-                <img src="img/limones.png" alt="Juego Limones" class="logo">
             </div>
 
-
-            <h3>Juego Limones</h3>
-
-            <p>Atrapa los limones antes de que caigan. El juego aumenta su dificultad mientras avanzas.</p>
-
-            <a href="https://juego-limones-octopus.vercel.app/" target="_blank">Ver Proyecto</a>
-
+        </header>
+        <!-- Zona donde el usuario puede depositar imágenes atrapadas -->
+        <div id="deposit-area" class="deposit-hidden" aria-hidden="true">
+            <div class="deposit-inner">
+                <button id="deposit-close" class="deposit-close" aria-label="Cerrar depósito">✕</button>
+                <h3>Deposita aquí</h3>
+                <div id="deposit-slot" class="deposit-slot"></div>
+            </div>
         </div>
 
-        <div class="card">
+        <!-- Modal para ver la imagen ampliada -->
+        <div id="img-modal" class="img-modal-hidden" aria-hidden="true">
+            <div class="img-modal-backdrop"></div>
+            <div class="img-modal-content">
+                <button id="modal-close" class="modal-close" aria-label="Cerrar">✕</button>
+                <img id="modal-img" src="" alt="Imagen ampliada">
+                <div id="modal-caption" class="modal-caption" aria-live="polite"></div>
+            </div>
+        </div>
 
-            <div class="contenedor2">
-                <img src="img/cazando.png" alt="Juego Cazando" class="logo">
+        <section id="proyectos" class="contenedor">
+
+            <div class="card">
+                <div class="contenedor2">
+                    <img src="img/limones.png" alt="Juego Limones" class="logo">
+                </div>
+
+
+                <h3>Juego Limones</h3>
+
+                <p>Atrapa los limones antes de que caigan. El juego aumenta su dificultad mientras avanzas.</p>
+
+                <a href="https://juego-limones-octopus.vercel.app/" target="_blank">Ver Proyecto</a>
+
             </div>
 
-            <h3>Juego Cazando</h3>
+            <div class="card">
 
-            <p>Consigue la comida antes de que termine el tiempo y alcanza los 6 puntos para ganar.</p>
+                <div class="contenedor2">
+                    <img src="img/cazando.png" alt="Juego Cazando" class="logo">
+                </div>
 
-            <a href="https://juego-cazando-octopus.vercel.app/" target="_blank">Ver Proyecto</a>
+                <h3>Juego Cazando</h3>
 
-        </div>
+                <p>Consigue la comida antes de que termine el tiempo y alcanza los 6 puntos para ganar.</p>
 
-        <!-- Agrega aquí más tarjetas -->
+                <a href="https://juego-cazando-octopus.vercel.app/" target="_blank">Ver Proyecto</a>
+
+            </div>
+
+            <!-- Agrega aquí más tarjetas -->
 
 
-    </section>
+        </section>
 
 
-    <footer id="contacto">
+        <footer id="contacto">
 
-        <p>© 2026 Carlos Barreto</p>
+            <p>© 2026 Carlos Barreto</p>
 
-        <a href="https://wa.me/593987688143?text=Hola%20Carlos,%20quiero%20saber%20más%20de%20tus%20proyectos
+            <a href="https://wa.me/593987688143?text=Hola%20Carlos,%20quiero%20saber%20más%20de%20tus%20proyectos
 " target="_blank">
-            <img src="img/octopus.png" alt="Logo" class="logo">
-        </a>
+                <img src="img/octopus.png" alt="Logo" class="logo">
+            </a>
 
-    </footer>
-    <!-- //burbuja con informacion -->
-    <div class="bubble-container"></div>
+        </footer>
+        <!-- //burbuja con informacion -->
+        <div class="bubble-container"></div>
 
-    <!-- Sonidos -->
-    <audio id="pop-sound" src="sounds/bubble-pop.mp3" preload="auto"></audio>
-    <audio id="rise-sound" src="sounds/bubble-rise.mp3" preload="auto"></audio>
+        <!-- Sonidos -->
+        <audio id="pop-sound" src="sounds/bubble-pop.mp3" preload="auto"></audio>
+        <audio id="rise-sound" src="sounds/bubble-rise.mp3" preload="auto"></audio>
 
-    <script src="menu.js"></script>
-    <script src="burbuja.js"></script>
-
+        <script src="menu.js"></script>
+        <script src="burbuja.js"></script>
+    </div>
+    <div id="intro-overlay">
+        <div class="pulpo">
+            <img src="img/pulpo-1.png" class="frame f1" alt="Pulpo frame 1">
+            <img src="img/pulpo-2.png" class="frame f2" alt="Pulpo frame 2">
+            <img src="img/pulpo-3.png" class="frame f3" alt="Pulpo frame 3">
+            <img src="img/pulpo-4.png" class="frame f4" alt="Pulpo frame 4">
+            <img src="img/pulpo-5.png" class="frame f5" alt="Pulpo frame 5">
+        </div>
+    </div>
 </body>
 
 </html>
