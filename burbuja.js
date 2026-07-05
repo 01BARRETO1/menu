@@ -599,3 +599,168 @@ window.addEventListener("load", () => {
 });
 
 
+//Detectar visibilidad de pagina
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    // La pestaña está oculta → pausar burbujas y sonidos
+    clearInterval(bubbleInterval); // ejemplo: detener creación de burbujas
+    // Opcional: pausar sonidos
+    popSound.pause();
+    riseSound.pause();
+  } else {
+    // La pestaña vuelve a estar visible → reanudar
+    iniciarBurbujas(); // tu función que reinicia la animación
+  }
+});
+//// Selecciona todos los enlaces de proyectos
+document.querySelectorAll('section#proyectos a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    // Antes de abrir el link, detener burbujas y sonidos
+    detenerBurbujasYSonidos();
+
+    // El navegador igual abrirá el link en otra pestaña por target="_blank"
+    // No necesitas hacer nada más aquí
+  });
+});
+
+/* //
+function detenerBurbujasYSonidos() {
+  // Detener el intervalo que crea burbujas
+  if (typeof bubbleInterval !== "undefined") {
+    clearInterval(bubbleInterval);
+  }
+
+  // Pausar sonidos
+  const popSound = document.getElementById("pop-sound");
+  const riseSound = document.getElementById("rise-sound");
+  if (popSound) popSound.pause();
+  if (riseSound) riseSound.pause();
+
+  // Opcional: limpiar burbujas visibles
+  const container = document.querySelector(".bubble-container");
+  if (container) container.innerHTML = "";
+}
+
+//Reanudar automáticamente al volver a la pestaña
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    // La pestaña vuelve a estar visible → reiniciar burbujas
+    iniciarBurbujas();
+  }
+});
+
+//Función para iniciar burbujas
+function iniciarBurbujas() {
+  // Reinicia sonidos
+  const popSound = document.getElementById("pop-sound");
+  const riseSound = document.getElementById("rise-sound");
+  if (popSound) popSound.currentTime = 0;
+  if (riseSound) riseSound.currentTime = 0;
+
+  // Reinicia animación de burbujas
+  bubbleInterval = setInterval(() => {
+    crearBurbuja(); // tu función que crea y anima burbujas
+  }, 1500);
+} */
+
+ /* ---------- Bloque seguro para visibilidad y enlaces (reemplazar aquí) ---------- */
+
+/* Variables (no redeclarar si ya existen en otro sitio) */
+if (typeof bubbleInterval === "undefined") bubbleInterval = null;
+if (typeof isBubblesRunning === "undefined") isBubblesRunning = false;
+
+/* Referencias al DOM: se asignan en load sin redeclarar variables globales */
+window.addEventListener("load", () => {
+  // Asignar referencias solo si aún no existen
+  if (typeof popSound === "undefined" || popSound === null) {
+    popSound = document.getElementById("pop-sound");
+  }
+  if (typeof riseSound === "undefined" || riseSound === null) {
+    riseSound = document.getElementById("rise-sound");
+  }
+  if (typeof bubbleContainer === "undefined" || bubbleContainer === null) {
+    bubbleContainer = document.querySelector(".bubble-container");
+  }
+
+  // Instalar handlers (seguro si el script se ejecuta varias veces)
+  setupVisibilityHandler();
+  setupProjectLinks();
+
+  // Iniciar burbujas si la pestaña está visible y el contenedor existe
+  if (!document.hidden && bubbleContainer) iniciarBurbujas();
+});
+
+/* Manejo de visibilidad (evita duplicados) */
+function setupVisibilityHandler() {
+  if (window.__visibilityHandlerInstalled) return;
+  window.__visibilityHandlerInstalled = true;
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      // Pestaña oculta → detener todo de forma segura
+      detenerBurbujasYSonidos();
+    } else {
+      // Pestaña visible → reanudar solo si el contenedor existe
+      if (bubbleContainer) iniciarBurbujas();
+    }
+  });
+}
+
+/* Interceptar clicks en enlaces de proyectos (una sola vez) */
+function setupProjectLinks() {
+  if (window.__projectLinksHandlerInstalled) return;
+  window.__projectLinksHandlerInstalled = true;
+
+  document.querySelectorAll('section#proyectos a').forEach(link => {
+    link.addEventListener('click', () => {
+      // Antes de abrir la nueva pestaña, detener burbujas y sonidos
+      detenerBurbujasYSonidos();
+      // No hacemos preventDefault: dejamos que abra target="_blank"
+    });
+  });
+}
+
+/* Detener burbujas y sonidos (versión robusta) */
+function detenerBurbujasYSonidos() {
+  if (bubbleInterval) {
+    clearInterval(bubbleInterval);
+    bubbleInterval = null;
+  }
+  isBubblesRunning = false;
+
+  if (typeof popSound !== "undefined" && popSound) {
+    try { popSound.pause(); popSound.currentTime = 0; } catch (e) {}
+  }
+  if (typeof riseSound !== "undefined" && riseSound) {
+    try { riseSound.pause(); riseSound.currentTime = 0; } catch (e) {}
+  }
+
+  if (bubbleContainer) bubbleContainer.innerHTML = "";
+}
+
+/* Reanudar/iniciar burbujas (asegura un solo intervalo) */
+function iniciarBurbujas() {
+  if (isBubblesRunning) return;
+  if (!bubbleContainer) return; // no iniciar si no hay contenedor
+
+  isBubblesRunning = true;
+
+  if (bubbleInterval) {
+    clearInterval(bubbleInterval);
+    bubbleInterval = null;
+  }
+
+  // Reiniciar audios si existen
+  if (typeof popSound !== "undefined" && popSound) try { popSound.currentTime = 0; } catch(e) {}
+  if (typeof riseSound !== "undefined" && riseSound) try { riseSound.currentTime = 0; } catch(e) {}
+
+  bubbleInterval = setInterval(() => {
+    const maxOnScreen = 12;
+    const currentOnScreen = bubbleContainer ? bubbleContainer.children.length : 0;
+    if (!bubbleContainer || currentOnScreen < maxOnScreen) {
+      crearBurbuja();
+    }
+  }, 1500);
+}
+
+
