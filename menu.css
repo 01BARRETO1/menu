@@ -643,6 +643,55 @@ width:90px;
   visibility: visible;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px;
+  flex-wrap: wrap;
+  margin-top: 60px; /* ajusta según la altura de tu menú */
+}
+
+.logo {
+  max-width: 100%;   /* nunca se desborda del contenedor */
+  height: auto;      /* mantiene proporción */
+  cursor: pointer;   /* muestra que es clickeable */
+}
+.contenedor2 {
+  text-align: left;   /* o center, según lo que quieras */
+}
+
+
+#logo-krakedev-rect {
+  max-width: 100px;          /* tamaño máximo del logo */
+  height: auto;              /* mantiene proporción */
+  margin-right: 12px;        /* espacio entre logo y texto */
+}
+
+.header h3 {
+  font-size: 1.2rem;         /* tamaño relativo, se adapta */
+  margin: 0;
+}
+
+/* Responsivo: en pantallas pequeñas el texto se coloca debajo del logo */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;   /* logo arriba, texto abajo */
+    align-items: flex-start;  /* alineado a la izquierda */
+  }
+
+  #logo-krakedev-rect {
+    margin-right: 0;
+    margin-bottom: 8px;
+    max-width: 80px;          /* logo más pequeño en móviles */
+  }
+
+  .header h3 {
+    font-size: 1rem;          /* texto más pequeño en móviles */
+  }
+}
+
+
 /* --- Responsividad --- */
 
 /* Tablets */
