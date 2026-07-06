@@ -82,90 +82,150 @@ const bubbleData = [
   { img: "img/html-logo2.png", text: "HTML funciona como el esqueleto o la estructura de un sitio web" }
 ];
 
-const FLOAT_DURATION = 10000;
-const SPAWN_INTERVAL = 1800;
-const EXPLODE_DURATION = 450;
+// Tiempo que vive una burbuja antes de desaparecer sola.
+// IMPORTANTE: ya NO explotará automáticamente.
+// Solo se desvanecerá si nadie le da click.
+const FLOAT_DURATION = 99999;
 
+// Tiempo entre la aparición de una burbuja y la siguiente.
+const SPAWN_INTERVAL = 1800;
+
+// Tiempo que se espera después de explotar una burbuja con click
+// antes de eliminarla del DOM.
+const EXPLODE_DURATION = 900;
+
+// Inicia el temporizador que crea burbujas cada cierto intervalo.
 const spawnTimer = setInterval(spawnBubble, SPAWN_INTERVAL);
 
-/* ---------------- spawnBubble ---------------- */ // Comentario: Cabecera que indica el inicio de la función spawnBubble
-function spawnBubble() { // Crea una nueva burbuja en pantalla; función principal que genera el DOM y la lógica de interacción
-  const bubble = document.createElement("div"); // Crea un elemento <div> que representará la burbuja en el DOM
-  bubble.className = "bubble"; // Asigna la clase CSS "bubble" para estilos y animaciones
 
-  const size = Math.floor(Math.random() * 30) + 50; // Calcula un tamaño aleatorio entre 50 y 79 px; Math.random()*30 -> 0..29.999, +50 -> 50..79
-  bubble.style.width = size + "px"; // Aplica el ancho calculado a la burbuja en píxeles
-  bubble.style.height = size + "px"; // Aplica la altura calculada a la burbuja en píxeles (burbuja cuadrada que luego CSS puede redondear)
-  bubble.style.left = Math.random() * (window.innerWidth - size) + "px"; // Posiciona horizontalmente la burbuja en un punto aleatorio dentro del ancho de la ventana, restando su tamaño para que no salga del viewport
+/* ---------------- spawnBubble ---------------- */
+function spawnBubble() {
+  // Crea el elemento principal de la burbuja.
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
 
-  const isInformative = Math.random() < 0.6; // Booleano que decide si la burbuja llevará contenido informativo (60% de probabilidad)
-  let messageText = null; // Variable para almacenar el texto informativo que puede mostrar la burbuja; inicializada a null
-  let imageSrc = null; // Variable para almacenar la ruta/URL de la imagen asociada a la burbuja; inicializada a null
+  // Define un tamaño aleatorio para la burbuja entre 50px y 79px.
+  const size = Math.floor(Math.random() * 30) + 50;
+  bubble.style.width = size + "px";
+  bubble.style.height = size + "px";
 
-  if (isInformative) { // Si la burbuja debe ser informativa, se extrae un elemento aleatorio de bubbleData y se construyen nodos hijos
-    const idx = Math.floor(Math.random() * bubbleData.length); // Índice aleatorio dentro del array bubbleData
-    const data = bubbleData[idx]; // Obtiene el objeto de datos seleccionado (debe contener propiedades como img y text)
-    imageSrc = data.img; // Guarda la ruta de la imagen en imageSrc para usarla más adelante (por ejemplo al explotar)
+  // Coloca la burbuja en una posición horizontal aleatoria dentro de la pantalla.
+  bubble.style.left = Math.random() * (window.innerWidth - size) + "px";
 
-    const icon = document.createElement("img"); // Crea un elemento <img> que actuará como icono dentro de la burbuja
-    icon.className = "bubble-icon"; // Asigna la clase CSS "bubble-icon" para estilos específicos del icono
-    icon.src = data.img; // Establece la fuente de la imagen al valor proporcionado por data.img
-    icon.alt = "logo"; // Texto alternativo para accesibilidad; aquí se usa "logo"
-    bubble.appendChild(icon); // Inserta el icono dentro del elemento burbuja
+  // Decide si la burbuja tendrá imagen y mensaje.
+  const isInformative = Math.random() < 0.6;
 
-    const message = document.createElement("div"); // Crea un <div> que contendrá el texto informativo
-    message.className = "info-message"; // Asigna la clase CSS "info-message" para estilos del mensaje
-    message.textContent = data.text; // Rellena el contenido textual del mensaje con data.text
-    bubble.appendChild(message); // Inserta el mensaje dentro de la burbuja
+  // Estas variables guardan el texto y la imagen para usarlos solo si se hace click.
+  let messageText = null;
+  let imageSrc = null;
 
-    messageText = data.text; // Guarda el texto en messageText para usarlo en la explosión o en mensajes flotantes
-  } // Fin del bloque que añade contenido informativo a la burbuja
+  // Si la burbuja es informativa, se le agrega imagen y mensaje.
+  if (isInformative) {
+    // Selecciona un dato aleatorio del arreglo bubbleData.
+    const idx = Math.floor(Math.random() * bubbleData.length);
+    const data = bubbleData[idx];
 
-  // Línea en blanco intencional para separar la creación del elemento de la lógica de interacción
+    // Guarda la imagen para usarla cuando la burbuja explote por click.
+    imageSrc = data.img;
 
-  bubble.addEventListener("click", () => { // Añade un listener para el evento 'click' que detonará la "explosión" manual
-    if (bubble.dataset.popped) return; // Si la burbuja ya fue marcada como explotada (dataset.popped), salir para evitar doble ejecución
-    bubble.dataset.popped = "true"; // Marca la burbuja como explotada para evitar reentradas
+    // Crea la imagen dentro de la burbuja.
+    const icon = document.createElement("img");
+    icon.className = "bubble-icon";
+    icon.src = data.img;
+    icon.alt = "logo";
+    bubble.appendChild(icon);
 
-    try { riseSound.currentTime = 0; riseSound.play(); } catch (e) { } // Intenta reproducir el sonido de subida (riseSound); captura errores silenciosamente si el audio no existe o está bloqueado
+    // Crea el mensaje dentro de la burbuja.
+    const message = document.createElement("div");
+    message.className = "info-message";
+    message.textContent = data.text;
+    bubble.appendChild(message);
 
-    const bubbleRect = bubble.getBoundingClientRect(); // Obtiene las coordenadas y tamaño actuales de la burbuja en pantalla para posicionar efectos (fragmentos, mensajes, imágenes)
+    // Guarda el texto para mostrarlo cuando se haga click en la burbuja.
+    messageText = data.text;
+  }
 
-    if (messageText) createFloatingMessageAtRect(bubbleRect, messageText); // Si hay texto informativo, crea un mensaje flotante en la posición de la burbuja
-    createFragmentsAtRect(bubbleRect); // Crea fragmentos/partículas en la posición de la burbuja para la animación de explosión
+  // Evento de click.
+  // ESTA ES LA ÚNICA FORMA EN QUE LA BURBUJA EXPLOTA.
+  bubble.addEventListener("click", () => {
+    // Si la burbuja ya fue explotada, no hace nada.
+    if (bubble.dataset.popped) return;
 
-    bubble.classList.add("exploded"); // Añade la clase "exploded" para activar estilos/animaciones CSS de explosión
-    try { popSound.currentTime = 0; popSound.play(); } catch (e) { } // Intenta reproducir el sonido de "pop"; captura errores silenciosamente
+    // Marca la burbuja como explotada para evitar dobles clicks.
+    bubble.dataset.popped = "true";
 
-    // dentro del click handler
-    if (imageSrc) createFallingImageAtRect(bubbleRect, imageSrc, size, messageText); // Si la burbuja tiene imagen asociada, crea una imagen que cae desde la posición de la burbuja
-
-    if (bubble.dataset.timeoutId) clearTimeout(Number(bubble.dataset.timeoutId)); // Si existía un timeout programado para la explosión automática, lo limpia para evitar doble ejecución
-    setTimeout(() => { if (bubble.parentElement) bubble.remove(); }, EXPLODE_DURATION); // Tras la duración de la animación (EXPLODE_DURATION), elimina el nodo burbuja del DOM si aún está presente
-  }); // Fin del click handler
-
-  const timeoutId = setTimeout(() => { // Programa una explosión automática tras FLOAT_DURATION (comportamiento que hace que exploten solas)
-    if (bubble.dataset.popped) return; // Si ya fue explotada manualmente, salir para no repetir
-    bubble.dataset.popped = "true"; // Marca como explotada para bloquear reentradas
-
-    const bubbleRect = bubble.getBoundingClientRect(); // Obtiene la posición actual para efectos
-    if (messageText) createFloatingMessageAtRect(bubbleRect, messageText); // Crea mensaje flotante si corresponde
-    createFragmentsAtRect(bubbleRect); // Crea fragmentos/partículas para la explosión
-
-    bubble.classList.add("exploded"); // Activa la clase CSS de explosión
-    try { popSound.currentTime = 0; popSound.play(); } catch (e) { } // Reproduce el sonido de pop si está disponible
-
-    // llamada dentro del timeout
-    // dentro del timeout
-    if (imageSrc) { // Si la burbuja tenía imagen asociada, también la hace caer en la explosión automática
-      createFallingImageAtRect(bubbleRect, imageSrc, size, messageText); // Crea la imagen que cae desde la posición de la burbuja
+    // Cancela el desvanecimiento automático si todavía estaba programado.
+    if (bubble.dataset.timeoutId) {
+      clearTimeout(Number(bubble.dataset.timeoutId));
     }
-    setTimeout(() => { if (bubble.parentElement) bubble.remove(); }, EXPLODE_DURATION); // Elimina la burbuja tras la animación de explosión
-  }, FLOAT_DURATION); // FLOAT_DURATION define el tiempo en ms hasta que la burbuja explota automáticamente
 
-  bubble.dataset.timeoutId = timeoutId; // Guarda el id del timeout en dataset para poder cancelarlo si el usuario hace click antes
-  container.appendChild(bubble); // Añade la burbuja al contenedor principal (container debe ser una referencia al elemento DOM donde se muestran las burbujas)
-} // Fin de la función spawnBubble
+    // Intenta reproducir el sonido de subida.
+    try {
+      riseSound.currentTime = 0;
+      riseSound.play();
+    } catch (e) {}
+
+    // Obtiene la posición actual de la burbuja en pantalla.
+    const bubbleRect = bubble.getBoundingClientRect();
+
+    // Si la burbuja tenía mensaje, lo muestra al explotar por click.
+    if (messageText) {
+      createFloatingMessageAtRect(bubbleRect, messageText);
+    }
+
+    // Crea los fragmentos/partículas de la explosión.
+    createFragmentsAtRect(bubbleRect);
+
+    // Activa la animación CSS de explosión.
+    bubble.classList.add("exploded");
+
+    // Intenta reproducir el sonido de explosión.
+    try {
+      popSound.currentTime = 0;
+      popSound.play();
+    } catch (e) {}
+
+    // Si la burbuja tenía imagen, la muestra cayendo.
+    // Esto SOLO ocurre cuando el usuario hace click.
+    if (imageSrc) {
+      createFallingImageAtRect(bubbleRect, imageSrc, size, messageText);
+    }
+
+    // Elimina la burbuja después de la animación de explosión.
+    setTimeout(() => {
+      if (bubble.parentElement) {
+        bubble.remove();
+      }
+    }, EXPLODE_DURATION);
+  });
+
+  // Desaparición automática SIN explosión.
+  // Antes aquí explotaba sola, mostraba imagen, mensaje y partículas.
+  // Ahora solamente se desvanece y se elimina.
+  const fadeTimeoutId = setTimeout(() => {
+    // Si ya explotó por click, no hace nada.
+    if (bubble.dataset.popped) return;
+
+    // Marca la burbuja para que no pueda interactuar dos veces.
+    bubble.dataset.popped = "true";
+
+    // Agrega una clase CSS para desvanecerla suavemente.
+    bubble.classList.add("fade-out");
+
+    // Espera a que termine el desvanecimiento y luego elimina la burbuja.
+    setTimeout(() => {
+      if (bubble.parentElement) {
+        bubble.remove();
+      }
+    }, 800);
+  }, FLOAT_DURATION);
+
+  // Guarda el temporizador para poder cancelarlo si el usuario hace click.
+  bubble.dataset.timeoutId = fadeTimeoutId;
+
+  // Agrega la burbuja al contenedor principal.
+  container.appendChild(bubble);
+}
 
 
 /* ---------------- Mensaje y fragmentos ---------------- */
