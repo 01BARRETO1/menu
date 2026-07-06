@@ -73,11 +73,13 @@ const bubbleData = [
   { img: "img/js-logo.png", text: "JavaScript: lenguaje para la web." },
   { img: "img/html-logo.png", text: "HTML: estructura de páginas." },
   { img: "img/css-logo.png", text: "CSS: estilos y diseño." },
+  { img: "img/css-logo.png", text: "El CSS actúa como el diseño o la pintura que le da vida y estilo" },
   { img: "img/html-logo.png", text: "1989: Tim Berners-Lee inventa la Web con HTML como lenguaje de publicación." },
   { img: "img/www-logo.png", text: "World Wide Web - WWW" },
   { img: "img/js-logo.png", text: "JavaScript se creó en un tiempo récord de 10 días en 1995 por Brendan Eich" },
-  { img: "img/html-logo.png", text: "HTML se considera el lenguaje web más importante y su invención crucial para el surgimiento, desarrollo y expansión de la World Wide Web (WWW)" },
-  { img: "img/html-logo2.png", text: "HTML y CSS son los pilares de Internet. Mientras el HTML funciona como el esqueleto o la estructura de un sitio web, el CSS actúa como el diseño o la pintura que le da vida y estilo" }
+  { img: "img/html-logo.png", text: "HTML se considera el lenguaje web más importante"},
+  { img: "img/html-logo2.png", text: "HTML y CSS son los pilares de Internet." },
+  { img: "img/html-logo2.png", text: "HTML funciona como el esqueleto o la estructura de un sitio web" }
 ];
 
 const FLOAT_DURATION = 10000;
@@ -119,11 +121,13 @@ function spawnBubble() {
     messageText = data.text;
   }
 
-  try { riseSound.currentTime = 0; riseSound.play(); } catch (e) { }
+ 
 
   bubble.addEventListener("click", () => {
     if (bubble.dataset.popped) return;
     bubble.dataset.popped = "true";
+
+    try { riseSound.currentTime = 0; riseSound.play(); } catch (e) { }
 
     const bubbleRect = bubble.getBoundingClientRect();
 
@@ -758,7 +762,7 @@ function iniciarBurbujas() {
     const maxOnScreen = 12;
     const currentOnScreen = bubbleContainer ? bubbleContainer.children.length : 0;
     if (!bubbleContainer || currentOnScreen < maxOnScreen) {
-      crearBurbuja();
+      spawnBubble();
     }
   }, 1500);
 }

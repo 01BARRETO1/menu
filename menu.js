@@ -24,3 +24,10 @@ card.style.transition="1s";
 observer.observe(card);
 
 });
+
+function showInfoMessage(text) {
+  const msg = document.querySelector('.info-message');
+  msg.textContent = text;
+  msg.style.opacity = '1';
+  msg.style.animation = 'bubbleBorder 6s linear infinite, bubbleFloat 5s ease-in-out forwards';
+}

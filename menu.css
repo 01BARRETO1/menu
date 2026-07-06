@@ -298,44 +298,38 @@ width:90px;
 }
 
 /* Mensaje (clonado y posicionado en container) */
+/* Mostrar y animar subida lenta */
+/* Mensaje (ahora fixed para posicionarse respecto a la ventana) */
 .info-message {
   position: fixed;
-  background: #fff;
+  background: rgba(255,255,255,0.25);
   color: #2d3436;
-  padding: 10px;
-  border-radius: 8px;
+  
+  padding: 30px;              /* más padding para forma circular */
+  border: 2px solid #ccc;
+  border-radius: 70%;         /* círculo/ovalo automático */
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  width: 220px;
+  display: inline-block;      /* se ajusta al contenido */
   text-align: center;
   font-size: 14px;
+  font-weight: 500;
+  white-space: normal;        /* permite saltos de línea */
+  overflow-wrap: break-word;  /* corta palabras largas */
+  word-break: break-word;
+  max-width: 80%;             /* límite en pantallas pequeñas */
   opacity: 0;
   transform: translateY(0);
   pointer-events: auto;
   z-index: 1200;
+  line-height: 1.8;   /* más espacio entre líneas */
+  
 }
 
-/* Mostrar y animar subida lenta */
-/* Mensaje (ahora fixed para posicionarse respecto a la ventana) */
-.info-message {
-  position: fixed;            /* <-- FIX: usar fixed para posicionamiento en viewport */
-  background: #fff;
-  color: #2d3436;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  width: 220px;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0;
-  transform: translateY(0);
-  pointer-events: auto;
-  z-index: 1200;              /* encima de todo */
-}
 
 /* Mostrar y animar subida lenta */
 .info-message.show {
   opacity: 1;
-  animation: slowRise 5s linear forwards;
+  animation: slowRise 9s linear forwards;
 }
 
 
